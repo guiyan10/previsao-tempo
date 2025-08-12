@@ -1,0 +1,114 @@
+:root {
+  color-scheme: light dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell,
+    Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: linear-gradient(180deg, #0ea5e9 0%, #38bdf8 35%, #f0f9ff 35%, #f0f9ff 100%);
+}
+
+#root {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.app {
+  display: grid;
+  gap: 1rem;
+}
+
+.header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 2rem;
+  background: linear-gradient(90deg, #0ea5e9, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  background: rgba(255, 255, 255, 0.9);
+  color: inherit;
+  outline: none;
+  transition: box-shadow 150ms ease, border-color 150ms ease;
+}
+.search-input:focus {
+  border-color: rgba(2, 132, 199, 0.35);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+}
+
+.button {
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  background: linear-gradient(180deg, #0ea5e9, #0284c7);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.25);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+.button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.button:active { transform: translateY(0); filter: brightness(0.96); }
+
+.button.secondary {
+  background: linear-gradient(180deg, #22d3ee, #06b6d4);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hero {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.tips-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.tips-card .card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+

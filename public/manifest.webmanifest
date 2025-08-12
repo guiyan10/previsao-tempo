@@ -1,0 +1,11 @@
+{
+  "name": "Clima Agora",
+  "short_name": "Clima",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#0ea5e9",
+  "theme_color": "#0ea5e9",
+  "icons": []
+}
+
+
