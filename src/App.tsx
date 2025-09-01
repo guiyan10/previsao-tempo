@@ -1,26 +1,47 @@
 import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Search, MapPin, Sun, Moon, Cloud, Zap, TrendingUp } from 'lucide-react'
+import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
+import WeatherDashboard from './components/WeatherDashboard'
+import WeatherCharts from './components/WeatherCharts'
+import { ThemeSelector } from './components/ThemeSelector'
+import ProgressBar from './components/ProgressBar'
+import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { getWeatherByCity, getWeatherByCoords, type CurrentWeather } from './services/weatherApi'
 
-function App() {
+function AppContent() {
+  const { isDark, colorScheme } = useTheme()
   const [query, setQuery] = useState('')
   const [weather, setWeather] = useState<CurrentWeather | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [searchHistory, setSearchHistory] = useState<string[]>([])
+  const [showCharts, setShowCharts] = useState(false)
 
   async function handleSearch(city?: string) {
     const search = (city ?? query).trim()
     if (!search) return
+    
     setLoading(true)
     setError(null)
+    
     try {
       const data = await getWeatherByCity(search)
       setWeather(data)
+      
+      // Adicionar ao histórico
+      if (!searchHistory.includes(search)) {
+        setSearchHistory(prev => [search, ...prev.slice(0, 4)])
+      }
+      
+      toast.success(`Clima de ${data.city} carregado com sucesso!`)
     } catch (err: any) {
       const message = err?.response?.data?.message || 'Não foi possível obter o clima para esta cidade.'
       setError(message)
       setWeather(null)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -28,27 +49,33 @@ function App() {
 
   async function handleUseLocation() {
     if (!('geolocation' in navigator)) {
-      setError('Geolocalização não suportada neste dispositivo.')
+      toast.error('Geolocalização não suportada neste dispositivo.')
       return
     }
+    
     setLoading(true)
     setError(null)
+    
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
           const data = await getWeatherByCoords(pos.coords.latitude, pos.coords.longitude)
           setWeather(data)
+          toast.success(`Clima da sua localização carregado!`)
         } catch (err: any) {
           const message = err?.response?.data?.message || 'Falha ao obter clima pela sua localização.'
           setError(message)
           setWeather(null)
+          toast.error(message)
         } finally {
           setLoading(false)
         }
       },
       (geoErr) => {
         setLoading(false)
-        setError(geoErr.message || 'Permissão de localização negada.')
+        const message = geoErr.message || 'Permissão de localização negada.'
+        setError(message)
+        toast.error(message)
       },
       { enableHighAccuracy: true, timeout: 10000 },
     )
@@ -60,86 +87,309 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const getColorScheme = () => {
+    const colors = {
+      blue: { primary: '#3B82F6', secondary: '#60A5FA', accent: '#1E40AF' },
+      purple: { primary: '#8B5CF6', secondary: '#A78BFA', accent: '#5B21B6' },
+      green: { primary: '#10B981', secondary: '#34D399', accent: '#047857' },
+      orange: { primary: '#F59E0B', secondary: '#FBBF24', accent: '#D97706' },
+      pink: { primary: '#EC4899', secondary: '#F472B6', accent: '#BE185D' },
+    }
+    return colors[colorScheme]
+  }
+
+  const colors = getColorScheme()
+
   return (
-    <div className="app container py-4">
-      <nav className="navbar navbar-expand-lg bg-body-tertiary rounded-4 p-3 mb-4 shadow-sm">
-        <div className="container-fluid">
-          <span className="navbar-brand d-flex align-items-center gap-2">
-            <i className="bi bi-cloud-sun-fill text-primary"></i>
-            <span className="fw-bold">Clima Agora</span>
-          </span>
-          <div className="d-flex gap-2 ms-auto">
-            <button
-              className="btn btn-outline-info d-flex align-items-center gap-2"
+    <div className="app" data-theme={isDark ? 'dark' : 'light'} data-color-scheme={colorScheme}>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: isDark ? '#1F2937' : '#FFFFFF',
+            color: isDark ? '#FFFFFF' : '#374151',
+            border: `1px solid ${isDark ? '#374151' : '#E5E7EB'}`,
+          },
+        }}
+      />
+
+      {/* Header com navegação */}
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="app-header"
+        style={{
+          backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.3)'}`
+        }}
+      >
+        <div className="header-content">
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="logo"
+          >
+            <Cloud className="w-8 h-8" style={{ color: colors.primary }} />
+            <span className="logo-text">ClimaVision</span>
+          </motion.div>
+
+          <div className="header-actions">
+            <ThemeSelector />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={handleUseLocation}
-              aria-label="Usar minha localização"
+              className="location-btn"
+              style={{ backgroundColor: colors.secondary }}
             >
-              <i className="bi bi-geo-alt-fill"></i>
-              Localização
-            </button>
+              <MapPin className="w-4 h-4" />
+              <span>Localização</span>
+            </motion.button>
           </div>
         </div>
-      </nav>
+      </motion.header>
 
-      <section className="hero mb-4 p-3 p-md-4 rounded-4 shadow-sm">
-        <h1 className="title fw-bold mb-3">Clima Agora</h1>
-        <div className="row g-2 align-items-center">
-          <div className="col-12 col-md">
-            <div className="input-group input-group-lg">
-              <span className="input-group-text bg-white"><i className="bi bi-search"></i></span>
+      {/* Hero Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="hero-section"
+      >
+        <div className="hero-content">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="hero-title"
+          >
+            Descubra o <span style={{ color: colors.primary }}>Clima</span> do Mundo
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="hero-subtitle"
+          >
+            Previsões precisas, insights inteligentes e visualizações extraordinárias
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="search-container"
+          >
+            <div className="search-input-group">
+              <div className="search-icon">
+                <Search className="w-5 h-5" style={{ color: colors.primary }} />
+              </div>
               <input
-                className="form-control search-input"
+                className="search-input"
                 type="text"
-                placeholder="Digite o nome da cidade (ex: São Paulo)"
+                placeholder="Digite o nome da cidade..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleSearch()
                 }}
+                style={{
+                  backgroundColor: isDark ? 'rgba(55, 65, 81, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+                  border: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)'}`,
+                  color: isDark ? '#FFFFFF' : '#374151'
+                }}
               />
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleSearch()}
+                className="search-btn"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <Search className="w-4 h-4" />
+                <span>Buscar</span>
+              </motion.button>
             </div>
-          </div>
-          <div className="col-12 col-md-auto">
-            <button
-              className="btn btn-primary btn-lg w-100"
-              onClick={() => handleSearch()}
-              aria-label="Buscar cidade"
+
+            {/* Histórico de buscas */}
+            {searchHistory.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="search-history"
+              >
+                <span className="history-label">Buscas recentes:</span>
+                <div className="history-tags">
+                  {searchHistory.map((city, index) => (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleSearch(city)}
+                      className="history-tag"
+                      style={{ backgroundColor: colors.secondary }}
+                    >
+                      {city}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Conteúdo Principal */}
+      <main className="main-content">
+        {weather && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="weather-content"
+          >
+            {/* Dashboard e Card Principal */}
+            <div className="weather-main-grid">
+              <div className="weather-card-section">
+                <WeatherCard weather={weather} loading={loading} error={error} />
+              </div>
+              
+              <div className="dashboard-section">
+                <WeatherDashboard weather={weather} />
+              </div>
+            </div>
+
+            {/* Barras de Progresso Gamificadas */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="progress-section"
             >
-              Buscar
-            </button>
-          </div>
-        </div>
-      </section>
+              <h3 className="section-title">
+                <TrendingUp className="w-5 h-5 mr-2" />
+                Seu Progresso Climático
+              </h3>
+              <div className="progress-grid">
+                <ProgressBar
+                  current={Math.abs(weather.temperatureC)}
+                  max={50}
+                  label="Temperatura"
+                  type="temperature"
+                  showAchievement
+                />
+                <ProgressBar
+                  current={weather.humidity}
+                  max={100}
+                  label="Umidade"
+                  type="humidity"
+                  showAchievement
+                />
+                <ProgressBar
+                  current={weather.windSpeedKmh}
+                  max={50}
+                  label="Velocidade do Vento"
+                  type="wind"
+                  showAchievement
+                />
+              </div>
+            </motion.div>
 
-      <div className="row g-4 align-items-stretch">
-        <div className="col-12 col-md-7 col-xl-6 d-flex">
-          <WeatherCard weather={weather} loading={loading} error={error} />
-        </div>
-        <div className="col-12 col-md-5 col-xl-6 d-flex">
-          <div className="card tips-card border-0 shadow rounded-4 p-3 w-100">
-            <div className="card-body">
-              <h5 className="card-title mb-3">Dicas rápidas</h5>
-              <ul className="list-unstyled small mb-0 d-grid gap-2">
-                <li className="d-flex align-items-start gap-2">
-                  <i className="bi bi-thermometer-sun text-danger"></i>
-                  Verifique a temperatura antes de sair.
-                </li>
-                <li className="d-flex align-items-start gap-2">
-                  <i className="bi bi-umbrella-fill text-primary"></i>
-                  Se chover, use guarda-chuva.
-                </li>
-                <li className="d-flex align-items-start gap-2">
-                  <i className="bi bi-wind text-info"></i>
-                  Ventos fortes? Evite roupas leves.
-                </li>
-              </ul>
+            {/* Gráficos Interativos */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+              className="charts-section"
+            >
+              <div className="charts-header">
+                <h3 className="section-title">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Visualizações Avançadas
+                </h3>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowCharts(!showCharts)}
+                  className="toggle-charts-btn"
+                  style={{ backgroundColor: colors.primary }}
+                >
+                  {showCharts ? 'Ocultar' : 'Mostrar'} Gráficos
+                </motion.button>
+              </div>
+
+              <AnimatePresence>
+                {showCharts && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <WeatherCharts weather={weather} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Estado inicial */}
+        {!weather && !loading && !error && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="welcome-section"
+          >
+            <div className="welcome-content">
+              <div className="welcome-icon">🌤️</div>
+              <h2 className="welcome-title">Bem-vindo ao ClimaVision</h2>
+              <p className="welcome-text">
+                Digite o nome de uma cidade ou use sua localização para começar a explorar o clima
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleUseLocation}
+                className="welcome-btn"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <MapPin className="w-4 h-4 mr-2" />
+                Usar Minha Localização
+              </motion.button>
             </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        )}
+      </main>
 
-      <footer className="pt-4 small text-muted text-center">Dados de clima por OpenWeather</footer>
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="app-footer"
+        style={{
+          backgroundColor: isDark ? 'rgba(31, 41, 55, 0.9)' : 'rgba(249, 250, 251, 0.9)',
+          borderTop: `1px solid ${isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.3)'}`
+        }}
+      >
+        <div className="footer-content">
+          <p className="footer-text">
+            Dados de clima por <strong>OpenWeather</strong> • 
+            Criado com ❤️ e tecnologia moderna
+          </p>
+        </div>
+      </motion.footer>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   )
 }
 
