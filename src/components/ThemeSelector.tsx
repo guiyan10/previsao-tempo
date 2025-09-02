@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Palette, Sun, Moon, Settings, X } from 'lucide-react'
+import { FaPalette, FaSun, FaMoon, FaCog, FaTimes } from 'react-icons/fa'
 import { useTheme } from '../contexts/ThemeContext'
 import './ThemeSelector.css'
 
@@ -31,7 +31,7 @@ export function ThemeSelector() {
           border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`
         }}
       >
-        <Settings size={20} />
+        <FaCog size={20} />
       </motion.button>
 
       <AnimatePresence>
@@ -50,14 +50,14 @@ export function ThemeSelector() {
             {/* Botão de fechar */}
             <div className="theme-close-btn">
               <button onClick={closeMenu} className="close-btn">
-                <X size={16} />
+                <FaTimes size={16} />
               </button>
             </div>
 
             {/* Seção de Modo */}
             <div className="theme-section">
               <h3 className="section-title">
-                <Palette size={16} />
+                <FaPalette size={16} />
                 MODO
               </h3>
               <button
@@ -68,7 +68,7 @@ export function ThemeSelector() {
                   border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'}`
                 }}
               >
-                {isDark ? <Moon size={16} /> : <Sun size={16} />}
+                {isDark ? <FaMoon size={16} /> : <FaSun size={16} />}
                 {isDark ? 'Escuro' : 'Claro'}
               </button>
             </div>
@@ -76,7 +76,7 @@ export function ThemeSelector() {
             {/* Seção de Esquema de Cores */}
             <div className="theme-section">
               <h3 className="section-title">
-                <Palette size={16} />
+                <FaPalette size={16} />
                 ESQUEMA DE CORES
               </h3>
               <div className="color-options">
@@ -107,7 +107,7 @@ export function ThemeSelector() {
             {/* Seção de Preview */}
             <div className="theme-section">
               <h3 className="section-title">
-                <Palette size={16} />
+                <FaPalette size={16} />
                 PREVIEW
               </h3>
               <div className="theme-preview">

@@ -1,6 +1,5 @@
-import React from 'react'
 import { motion } from 'framer-motion'
-import { Trophy, Star, Target } from 'lucide-react'
+import { FaThermometerHalf, FaTint, FaWind, FaStar } from 'react-icons/fa'
 import { useTheme } from '../contexts/ThemeContext'
 import './ProgressBar.css'
 
@@ -32,13 +31,13 @@ export default function ProgressBar({ current, max, label, type, showAchievement
   const getTypeIcon = () => {
     switch (type) {
       case 'temperature':
-        return <Target className="w-4 h-4" />
+        return <FaThermometerHalf className="w-4 h-4" />
       case 'humidity':
-        return <Star className="w-4 h-4" />
+        return <FaTint className="w-4 h-4" />
       case 'wind':
-        return <Trophy className="w-4 h-4" />
+        return <FaWind className="w-4 h-4" />
       default:
-        return <Star className="w-4 h-4" />
+        return <FaStar className="w-4 h-4" />
     }
   }
 
@@ -110,7 +109,7 @@ export default function ProgressBar({ current, max, label, type, showAchievement
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.3 }}
           style={{
-            left: `${Math.min(percentage, 95)}%`,
+            left: `${Math.min(Math.max(percentage, 5), 95)}%`, // Garante que não fique muito nas bordas
             backgroundColor: colors.primary,
             color: '#FFFFFF'
           }}

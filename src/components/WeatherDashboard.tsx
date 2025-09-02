@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { TrendingUp, TrendingDown, Thermometer, Droplets, Wind, Eye, Award, Target } from 'lucide-react'
+import { FaThermometerHalf, FaTint, FaWind, FaEye, FaAward, FaBullseye, FaArrowUp, FaArrowDown } from 'react-icons/fa'
 import { useTheme } from '../contexts/ThemeContext'
 import type { CurrentWeather } from '../services/weatherApi'
 import './WeatherDashboard.css'
@@ -34,13 +34,13 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
       newInsights.push({
         type: 'warning',
         message: 'Temperatura alta! Mantenha-se hidratado e evite exposição prolongada ao sol.',
-        icon: <Thermometer className="w-5 h-5" />
+        icon: <FaThermometerHalf className="w-5 h-5" />
       })
     } else if (weather.temperatureC < 10) {
       newInsights.push({
         type: 'warning',
         message: 'Temperatura baixa! Use roupas adequadas para o frio.',
-        icon: <Thermometer className="w-5 h-5" />
+        icon: <FaThermometerHalf className="w-5 h-5" />
       })
     }
 
@@ -49,13 +49,13 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
       newInsights.push({
         type: 'info',
         message: 'Umidade elevada. Pode haver sensação de abafamento.',
-        icon: <Droplets className="w-5 h-5" />
+        icon: <FaTint className="w-5 h-5" />
       })
     } else if (weather.humidity < 30) {
       newInsights.push({
         type: 'warning',
         message: 'Umidade baixa. Hidrate-se bem e use hidratante para a pele.',
-        icon: <Droplets className="w-5 h-5" />
+        icon: <FaTint className="w-5 h-5" />
       })
     }
 
@@ -64,7 +64,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
       newInsights.push({
         type: 'warning',
         message: 'Ventos fortes! Evite roupas leves e objetos soltos.',
-        icon: <Wind className="w-5 h-5" />
+        icon: <FaWind className="w-5 h-5" />
       })
     }
 
@@ -73,7 +73,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
       newInsights.push({
         type: 'success',
         message: 'Condições climáticas ideais para atividades ao ar livre!',
-        icon: <TrendingUp className="w-5 h-5" />
+        icon: <FaArrowUp className="w-5 h-5" />
       })
     }
 
@@ -138,7 +138,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
         >
           <div className="header-content">
             <h2 className="dashboard-title">
-              <Target className="w-6 h-6 mr-2" />
+              <FaBullseye className="w-6 h-6 mr-2" />
               Dashboard Meteorológico
             </h2>
             <p className="dashboard-subtitle">{getWeatherMood()}</p>
@@ -150,7 +150,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
             className="achievements-btn"
             style={{ backgroundColor: colors.primary }}
           >
-            <Award className="w-5 h-5" />
+            <FaAward className="w-5 h-5" />
             <span className="achievement-count">{achievements.length}</span>
           </motion.button>
         </motion.div>
@@ -163,16 +163,16 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
             style={{ borderColor: colors.primary }}
           >
             <div className="stat-icon" style={{ backgroundColor: colors.primary }}>
-              <Thermometer className="w-6 h-6" />
+              <FaThermometerHalf className="w-6 h-6" />
             </div>
             <div className="stat-content">
               <h3 className="stat-value">{Math.round(weather.temperatureC)}°C</h3>
               <p className="stat-label">Temperatura Atual</p>
               <div className="stat-trend">
                 {weather.temperatureC > 25 ? (
-                  <TrendingUp className="w-4 h-4 text-red-500" />
+                  <FaArrowUp className="w-4 h-4 text-red-500" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-blue-500" />
+                  <FaArrowDown className="w-4 h-4 text-blue-500" />
                 )}
                 <span className="trend-text">
                   {weather.temperatureC > 25 ? 'Acima da média' : 'Abaixo da média'}
@@ -187,16 +187,16 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
             style={{ borderColor: colors.secondary }}
           >
             <div className="stat-icon" style={{ backgroundColor: colors.secondary }}>
-              <Droplets className="w-6 h-6" />
+              <FaTint className="w-6 h-6" />
             </div>
             <div className="stat-content">
               <h3 className="stat-value">{weather.humidity}%</h3>
               <p className="stat-label">Umidade Relativa</p>
               <div className="stat-trend">
                 {weather.humidity > 60 ? (
-                  <TrendingUp className="w-4 h-4 text-blue-500" />
+                  <FaArrowUp className="w-4 h-4 text-blue-500" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-orange-500" />
+                  <FaArrowDown className="w-4 h-4 text-orange-500" />
                 )}
                 <span className="trend-text">
                   {weather.humidity > 60 ? 'Umidade elevada' : 'Umidade baixa'}
@@ -211,16 +211,16 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
             style={{ borderColor: colors.accent }}
           >
             <div className="stat-icon" style={{ backgroundColor: colors.accent }}>
-              <Wind className="w-6 h-6" />
+              <FaWind className="w-6 h-6" />
             </div>
             <div className="stat-content">
               <h3 className="stat-value">{weather.windSpeedKmh} km/h</h3>
               <p className="stat-label">Velocidade do Vento</p>
               <div className="stat-trend">
                 {weather.windSpeedKmh > 15 ? (
-                  <TrendingUp className="w-4 h-4 text-yellow-500" />
+                  <FaArrowUp className="w-4 h-4 text-yellow-500" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-green-500" />
+                  <FaArrowDown className="w-4 h-4 text-green-500" />
                 )}
                 <span className="trend-text">
                   {weather.windSpeedKmh > 15 ? 'Ventos moderados' : 'Ventos leves'}
@@ -238,7 +238,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
           className="insights-section"
         >
           <h3 className="insights-title">
-            <Eye className="w-5 h-5 mr-2" />
+            <FaEye className="w-5 h-5 mr-2" />
             Insights Inteligentes
           </h3>
           <div className="insights-grid">
@@ -271,7 +271,7 @@ export default function WeatherDashboard({ weather }: WeatherDashboardProps) {
               className="achievements-section"
             >
               <h3 className="achievements-title">
-                <Award className="w-5 h-5 mr-2" />
+                <FaAward className="w-5 h-5 mr-2" />
                 Suas Conquistas
               </h3>
               <div className="achievements-grid">

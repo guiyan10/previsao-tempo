@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, MapPin, Sun, Moon, Cloud, Zap, TrendingUp } from 'lucide-react'
+import { Cloud } from 'lucide-react'
+import { FaSearch, FaMapMarkerAlt, FaCloud, FaBolt } from 'react-icons/fa'
 import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
@@ -8,7 +9,6 @@ import WeatherDashboard from './components/WeatherDashboard'
 import WeatherCharts from './components/WeatherCharts'
 import WeeklyForecast from './components/WeeklyForecast'
 import { ThemeSelector } from './components/ThemeSelector'
-import ProgressBar from './components/ProgressBar'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
 import { getWeatherByCity, getWeatherByCoords, getWeeklyForecastByCity, getWeeklyForecastByCoords, type CurrentWeather, type WeeklyForecast as WeeklyForecastType } from './services/weatherApi'
 
@@ -146,7 +146,7 @@ function AppContent() {
             whileHover={{ scale: 1.05 }}
             className="logo"
           >
-            <Cloud className="w-8 h-8" style={{ color: colors.primary }} />
+            <FaCloud className="w-8 h-8" style={{ color: colors.primary }} />
             <span className="logo-text">ClimaVision</span>
           </motion.div>
 
@@ -159,7 +159,7 @@ function AppContent() {
               className="location-btn"
               style={{ backgroundColor: colors.secondary }}
             >
-              <MapPin className="w-4 h-4" />
+              <FaMapMarkerAlt className="w-4 h-4" />
               <span>Localização</span>
             </motion.button>
           </div>
@@ -174,14 +174,84 @@ function AppContent() {
         className="hero-section"
       >
         <div className="hero-content">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="hero-title"
-          >
-            Descubra o <span style={{ color: colors.primary }}>Clima</span> do Mundo
-          </motion.h1>
+          <div className="hero-title-container">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="hero-title"
+            >
+              Descubra o <span style={{ color: colors.primary }}>Clima</span> do Mundo
+            </motion.h1>
+            
+            {/* Nuvem Animada */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, x: 50 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="animated-cloud"
+              style={{
+                color: isDark ? '#94A3B8' : '#3B82F6',
+                filter: isDark ? 'brightness(0.8)' : 'brightness(1.2)'
+              }}
+            >
+              <motion.div
+                animate={{
+                  y: [-5, 5, -5],
+                  rotate: [-2, 2, -2],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="cloud-icon"
+              >
+                <Cloud size={80} />
+              </motion.div>
+              
+              {/* Pequenas nuvens decorativas */}
+              <motion.div
+                className="small-cloud-1"
+                animate={{
+                  y: [0, -8, 0],
+                  x: [0, 3, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5
+                }}
+                style={{
+                  color: isDark ? '#64748B' : '#60A5FA',
+                  opacity: 0.7
+                }}
+              >
+                <Cloud size={40} />
+              </motion.div>
+              
+              <motion.div
+                className="small-cloud-2"
+                animate={{
+                  y: [0, 6, 0],
+                  x: [0, -4, 0],
+                }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+                style={{
+                  color: isDark ? '#475569' : '#93C5FD',
+                  opacity: 0.6
+                }}
+              >
+                <Cloud size={30} />
+              </motion.div>
+            </motion.div>
+          </div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -199,7 +269,7 @@ function AppContent() {
           >
             <div className="search-input-group">
               <div className="search-icon">
-                <Search className="w-5 h-5" style={{ color: colors.primary }} />
+                <FaSearch className="w-5 h-5" style={{ color: colors.primary }} />
               </div>
               <input
                 className="search-input"
@@ -223,7 +293,7 @@ function AppContent() {
                 className="search-btn"
                 style={{ backgroundColor: colors.primary }}
               >
-                <Search className="w-4 h-4" />
+                <FaSearch className="w-4 h-4" />
                 <span>Buscar</span>
               </motion.button>
             </div>
@@ -286,52 +356,18 @@ function AppContent() {
               <WeeklyForecast forecast={weeklyForecast} loading={loading} />
             </motion.div>
 
-            {/* Barras de Progresso Gamificadas */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="progress-section"
-            >
-              <h3 className="section-title">
-                <TrendingUp className="w-5 h-5 mr-2" />
-                Seu Progresso Climático
-              </h3>
-              <div className="progress-grid">
-                <ProgressBar
-                  current={Math.abs(weather.temperatureC)}
-                  max={50}
-                  label="Temperatura"
-                  type="temperature"
-                  showAchievement
-                />
-                <ProgressBar
-                  current={weather.humidity}
-                  max={100}
-                  label="Umidade"
-                  type="humidity"
-                  showAchievement
-                />
-                <ProgressBar
-                  current={weather.windSpeedKmh}
-                  max={50}
-                  label="Velocidade do Vento"
-                  type="wind"
-                  showAchievement
-                />
-              </div>
-            </motion.div>
+
 
             {/* Gráficos Interativos */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.7 }}
               className="charts-section"
             >
               <div className="charts-header">
                 <h3 className="section-title">
-                  <Zap className="w-5 h-5 mr-2" />
+                  <FaBolt className="w-5 h-5 mr-2" />
                   Visualizações Avançadas
                 </h3>
                 <motion.button
@@ -381,7 +417,7 @@ function AppContent() {
                 className="welcome-btn"
                 style={{ backgroundColor: colors.primary }}
               >
-                <MapPin className="w-4 h-4 mr-2" />
+                <FaMapMarkerAlt className="w-4 h-4 mr-2" />
                 Usar Minha Localização
               </motion.button>
             </div>
