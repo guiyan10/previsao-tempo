@@ -1,0 +1,431 @@
+/* ThemeSelector - Estilos modernos com glassmorphism */
+
+.theme-selector {
+  position: relative;
+}
+
+.theme-toggle-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+/* Menu de temas */
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  min-width: 280px;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.theme-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+/* Botão de fechar */
+.theme-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Seções do menu */
+.theme-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+}
+
+.theme-section:first-child {
+  padding-top: 3.5rem; /* Espaço para o botão de fechar */
+}
+
+.theme-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-title svg {
+  margin-right: 0.5rem;
+}
+
+/* Toggle de modo */
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: center;
+  color: var(--text-primary);
+}
+
+.mode-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Opções de cores */
+.color-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.color-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.color-option.active {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8);
+}
+
+.checkmark {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Preview do tema */
+.theme-preview {
+  display: flex;
+  justify-content: center;
+}
+
+.preview-card {
+  width: 100%;
+  max-width: 200px;
+  padding: 1rem;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-accent {
+  height: 4px;
+  width: 100%;
+  border-radius: 2px;
+  margin-bottom: 0.75rem;
+}
+
+.preview-content {
+  text-align: center;
+}
+
+.preview-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .theme-menu {
+    right: -100px;
+    min-width: 250px;
+  }
+  
+  .theme-section {
+    padding: 1rem;
+  }
+  
+  .theme-section:first-child {
+    padding-top: 3rem;
+  }
+  
+  .color-options {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .theme-menu {
+    right: -150px;
+    min-width: 220px;
+  }
+  
+  .theme-toggle-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .color-option {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .checkmark {
+    font-size: 0.875rem;
+  }
+  
+  .close-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Animações */
+.theme-menu {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Efeitos de glassmorphism */
+.theme-toggle-btn,
+.theme-menu {
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Gradientes sutis */
+.theme-toggle-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* Estados de foco para acessibilidade */
+.theme-toggle-btn:focus,
+.mode-toggle:focus,
+.color-option:focus,
+.close-btn:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Transições suaves */
+.theme-toggle-btn *,
+.theme-menu *,
+.mode-toggle *,
+.color-option *,
+.close-btn * {
+  transition: all 0.2s ease;
+}
+
+/* Melhorias para modo escuro */
+[data-theme="dark"] .theme-menu {
+  background: rgba(31, 41, 55, 0.95);
+  border-color: rgba(75, 85, 99, 0.3);
+}
+
+[data-theme="dark"] .theme-menu::before {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    rgba(255, 255, 255, 0.02) 100%);
+}
+
+[data-theme="dark"] .theme-section {
+  border-bottom-color: rgba(75, 85, 99, 0.3);
+}
+
+[data-theme="dark"] .close-btn {
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+[data-theme="dark"] .close-btn:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Efeitos de hover específicos */
+.color-option:hover {
+  filter: brightness(1.1);
+}
+
+.color-option.active:hover {
+  transform: scale(1.2);
+}
+
+/* Indicador de posição do menu */
+.theme-menu::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 20px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid;
+  border-bottom-color: inherit;
+  filter: brightness(0.9);
+}
+
+/* Melhorias para dispositivos touch */
+@media (hover: none) {
+  .theme-toggle-btn:hover,
+  .mode-toggle:hover,
+  .color-option:hover,
+  .close-btn:hover {
+    transform: none;
+  }
+  
+  .theme-toggle-btn:active,
+  .mode-toggle:active,
+  .color-option:active,
+  .close-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Efeitos de partículas para o botão principal */
+.theme-toggle-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.6s ease;
+}
+
+.theme-toggle-btn:hover::before {
+  width: 100px;
+  height: 100px;
+}
+
+/* Animações de entrada para opções de cores */
+.color-option {
+  animation: colorOptionFadeIn 0.3s ease-out;
+  animation-fill-mode: both;
+}
+
+.color-option:nth-child(1) { animation-delay: 0.1s; }
+.color-option:nth-child(2) { animation-delay: 0.2s; }
+.color-option:nth-child(3) { animation-delay: 0.3s; }
+.color-option:nth-child(4) { animation-delay: 0.4s; }
+.color-option:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes colorOptionFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
