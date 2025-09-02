@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Cloud } from 'lucide-react'
-import { FaSearch, FaMapMarkerAlt, FaCloud, FaBolt } from 'react-icons/fa'
+import { FaSearch, FaMapMarkerAlt, FaCloud } from 'react-icons/fa'
 import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import WeatherCard from './components/WeatherCard'
 import WeatherDashboard from './components/WeatherDashboard'
-import WeatherCharts from './components/WeatherCharts'
 import WeeklyForecast from './components/WeeklyForecast'
 import { ThemeSelector } from './components/ThemeSelector'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
@@ -20,7 +19,6 @@ function AppContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [searchHistory, setSearchHistory] = useState<string[]>([])
-  const [showCharts, setShowCharts] = useState(false)
 
   async function handleSearch(city?: string) {
     const search = (city ?? query).trim()
@@ -147,7 +145,7 @@ function AppContent() {
             className="logo"
           >
             <FaCloud className="w-8 h-8" style={{ color: colors.primary }} />
-            <span className="logo-text">ClimaVision</span>
+            <span className="logo-text">BanksWeather</span>
           </motion.div>
 
           <div className="header-actions">
@@ -355,45 +353,6 @@ function AppContent() {
             >
               <WeeklyForecast forecast={weeklyForecast} loading={loading} />
             </motion.div>
-
-
-
-            {/* Gráficos Interativos */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="charts-section"
-            >
-              <div className="charts-header">
-                <h3 className="section-title">
-                  <FaBolt className="w-5 h-5 mr-2" />
-                  Visualizações Avançadas
-                </h3>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowCharts(!showCharts)}
-                  className="toggle-charts-btn"
-                  style={{ backgroundColor: colors.primary }}
-                >
-                  {showCharts ? 'Ocultar' : 'Mostrar'} Gráficos
-                </motion.button>
-              </div>
-
-              <AnimatePresence>
-                {showCharts && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <WeatherCharts weather={weather} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
           </motion.div>
         )}
 
@@ -438,8 +397,7 @@ function AppContent() {
       >
         <div className="footer-content">
           <p className="footer-text">
-            Dados de clima por <strong>OpenWeather</strong> • 
-            Criado com ❤️ e tecnologia moderna
+            Dados de clima por <strong>OpenWeather</strong> • Developed by <strong>Banks</strong>
           </p>
         </div>
       </motion.footer>

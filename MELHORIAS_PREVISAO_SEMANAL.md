@@ -74,7 +74,7 @@ const toggleExpanded = () => {
 ```css
 /* Desktop */
 .forecast-grid {
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 
 /* Tablet */
