@@ -6,15 +6,17 @@ import './App.css'
 import WeatherCard from './components/WeatherCard'
 import WeatherDashboard from './components/WeatherDashboard'
 import WeatherCharts from './components/WeatherCharts'
+import WeeklyForecast from './components/WeeklyForecast'
 import { ThemeSelector } from './components/ThemeSelector'
 import ProgressBar from './components/ProgressBar'
 import { ThemeProvider, useTheme } from './contexts/ThemeContext'
-import { getWeatherByCity, getWeatherByCoords, type CurrentWeather } from './services/weatherApi'
+import { getWeatherByCity, getWeatherByCoords, getWeeklyForecastByCity, getWeeklyForecastByCoords, type CurrentWeather, type WeeklyForecast as WeeklyForecastType } from './services/weatherApi'
 
 function AppContent() {
   const { isDark, colorScheme } = useTheme()
   const [query, setQuery] = useState('')
   const [weather, setWeather] = useState<CurrentWeather | null>(null)
+  const [weeklyForecast, setWeeklyForecast] = useState<WeeklyForecastType | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [searchHistory, setSearchHistory] = useState<string[]>([])
@@ -28,19 +30,26 @@ function AppContent() {
     setError(null)
     
     try {
-      const data = await getWeatherByCity(search)
-      setWeather(data)
+      // Buscar clima atual e previsão semanal em paralelo
+      const [currentData, weeklyData] = await Promise.all([
+        getWeatherByCity(search),
+        getWeeklyForecastByCity(search)
+      ])
+      
+      setWeather(currentData)
+      setWeeklyForecast(weeklyData)
       
       // Adicionar ao histórico
       if (!searchHistory.includes(search)) {
         setSearchHistory(prev => [search, ...prev.slice(0, 4)])
       }
       
-      toast.success(`Clima de ${data.city} carregado com sucesso!`)
+      toast.success(`Clima de ${currentData.city} carregado com sucesso!`)
     } catch (err: any) {
       const message = err?.response?.data?.message || 'Não foi possível obter o clima para esta cidade.'
       setError(message)
       setWeather(null)
+      setWeeklyForecast(null)
       toast.error(message)
     } finally {
       setLoading(false)
@@ -59,13 +68,20 @@ function AppContent() {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         try {
-          const data = await getWeatherByCoords(pos.coords.latitude, pos.coords.longitude)
-          setWeather(data)
+          // Buscar clima atual e previsão semanal em paralelo
+          const [currentData, weeklyData] = await Promise.all([
+            getWeatherByCoords(pos.coords.latitude, pos.coords.longitude),
+            getWeeklyForecastByCoords(pos.coords.latitude, pos.coords.longitude)
+          ])
+          
+          setWeather(currentData)
+          setWeeklyForecast(weeklyData)
           toast.success(`Clima da sua localização carregado!`)
         } catch (err: any) {
           const message = err?.response?.data?.message || 'Falha ao obter clima pela sua localização.'
           setError(message)
           setWeather(null)
+          setWeeklyForecast(null)
           toast.error(message)
         } finally {
           setLoading(false)
@@ -260,11 +276,21 @@ function AppContent() {
               </div>
             </div>
 
+            {/* Previsão Semanal */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="weekly-forecast-section"
+            >
+              <WeeklyForecast forecast={weeklyForecast} loading={loading} />
+            </motion.div>
+
             {/* Barras de Progresso Gamificadas */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.7 }}
               className="progress-section"
             >
               <h3 className="section-title">
@@ -300,7 +326,7 @@ function AppContent() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
+              transition={{ delay: 0.8 }}
               className="charts-section"
             >
               <div className="charts-header">
@@ -344,7 +370,7 @@ function AppContent() {
           >
             <div className="welcome-content">
               <div className="welcome-icon">🌤️</div>
-              <h2 className="welcome-title">Bem-vindo ao ClimaVision</h2>
+              <h2 className="welcome-title">Bem-vindo ao BanksWeather</h2>
               <p className="welcome-text">
                 Digite o nome de uma cidade ou use sua localização para começar a explorar o clima
               </p>

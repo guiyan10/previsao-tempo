@@ -1,0 +1,515 @@
+.weekly-forecast {
+  border-radius: 24px;
+  padding: 32px;
+  margin: 24px 0;
+  transition: all 0.3s ease;
+}
+
+.weekly-forecast.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid transparent;
+  border-top: 4px solid;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+}
+
+.loading-text {
+  color: var(--text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Header */
+.forecast-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.forecast-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.forecast-subtitle {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* Botão de toggle */
+.toggle-forecast-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toggle-forecast-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid de previsão - Cards menores */
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.forecast-day-card {
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.forecast-day-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.forecast-day-card:hover::before {
+  opacity: 1;
+}
+
+/* Header do dia */
+.day-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.day-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.day-date {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Ícone do clima */
+.weather-icon-container {
+  position: relative;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.weather-icon-svg {
+  width: 48px;
+  height: 48px;
+  color: var(--primary-color);
+}
+
+.weather-mood {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 16px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Seção de temperatura */
+.temperature-section {
+  margin-bottom: 12px;
+}
+
+.temp-main {
+  margin-bottom: 6px;
+}
+
+.temp-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.temp-range {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.temp-min {
+  color: #3B82F6;
+}
+
+.temp-separator {
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+.temp-max {
+  color: #EF4444;
+}
+
+/* Descrição */
+.weather-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  text-transform: capitalize;
+  line-height: 1.3;
+  flex-grow: 1;
+}
+
+/* Estatísticas básicas do dia */
+.day-stats-basic {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.stat-item-basic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.stat-value {
+  color: var(--text-primary);
+}
+
+/* Indicador de tendência */
+.trend-indicator {
+  height: 3px;
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.trend-bar {
+  height: 100%;
+  width: 100%;
+  border-radius: 2px;
+}
+
+/* Detalhes expandidos */
+.expanded-details {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  margin-top: 24px;
+}
+
+.detailed-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.detailed-day-stats {
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.detailed-day-stats:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.detailed-day-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailed-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detailed-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Resumo semanal */
+.weekly-summary {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+}
+
+.summary-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 20px 0;
+  text-align: center;
+}
+
+.summary-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summary-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .forecast-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  
+  .forecast-day-card {
+    padding: 18px 14px;
+    min-height: 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .weekly-forecast {
+    padding: 24px 20px;
+    margin: 16px 0;
+  }
+
+  .forecast-title {
+    font-size: 24px;
+  }
+
+  .forecast-subtitle {
+    font-size: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .forecast-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .forecast-day-card {
+    padding: 16px 12px;
+    min-height: 160px;
+  }
+
+  .temp-value {
+    font-size: 20px;
+  }
+
+  .day-date {
+    font-size: 18px;
+  }
+
+  .weather-icon-svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .detailed-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .summary-stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .weekly-forecast {
+    padding: 20px 16px;
+  }
+
+  .forecast-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .forecast-day-card {
+    padding: 20px 16px;
+    min-height: 180px;
+  }
+
+  .day-stats-basic {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 8px;
+  }
+
+  .stat-item-basic {
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+  }
+}
+
+/* Animações */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.forecast-day-card {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* Estados de hover */
+.forecast-day-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.summary-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Variáveis CSS para temas */
+.weekly-forecast[data-theme="light"] {
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --primary-color: #3B82F6;
+  --secondary-color: #60A5FA;
+}
+
+.weekly-forecast[data-theme="dark"] {
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  --primary-color: #60A5FA;
+  --secondary-color: #93C5FD;
+}
+
+/* Fallback para quando as variáveis não estão definidas */
+.weekly-forecast {
+  --text-primary: #1F2937;
+  --text-secondary: #6B7280;
+  --primary-color: #3B82F6;
+  --secondary-color: #60A5FA;
+}

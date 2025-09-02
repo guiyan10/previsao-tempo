@@ -217,7 +217,8 @@
 }
 
 .progress-section,
-.charts-section {
+.charts-section,
+.weekly-forecast-section {
   margin-top: 3rem;
 }
 
